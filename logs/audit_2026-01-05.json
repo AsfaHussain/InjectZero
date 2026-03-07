@@ -1,0 +1,222 @@
+[
+  {
+    "timestamp": "2026-01-05T06:56:53.803Z",
+    "requestId": "req_1767596213796_051yir6cx",
+    "certificateId": "cert_1767596213800_5o14up24v",
+    "agentId": "demo-agent-001",
+    "originalLength": 63,
+    "sanitizedLength": 88,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 2
+  },
+  {
+    "timestamp": "2026-01-05T06:56:54.848Z",
+    "requestId": "req_1767596214842_7i6lramvm",
+    "certificateId": "cert_1767596214844_skoj0pxyp",
+    "agentId": "demo-agent-001",
+    "originalLength": 100,
+    "sanitizedLength": 213,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 5
+  },
+  {
+    "timestamp": "2026-01-05T06:56:55.887Z",
+    "requestId": "req_1767596215878_umwvl9h2h",
+    "certificateId": "cert_1767596215882_vf39phqim",
+    "agentId": "demo-agent-001",
+    "originalLength": 122,
+    "sanitizedLength": 179,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 3
+  },
+  {
+    "timestamp": "2026-01-05T06:56:56.916Z",
+    "requestId": "req_1767596216904_wuqeme064",
+    "certificateId": "cert_1767596216908_5z1iyf03y",
+    "agentId": "demo-agent-001",
+    "originalLength": 91,
+    "sanitizedLength": 132,
+    "riskLevel": "medium",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 2
+  },
+  {
+    "timestamp": "2026-01-05T06:56:57.965Z",
+    "requestId": "req_1767596217947_3hooaem2e",
+    "certificateId": "cert_1767596217951_zlo17mt5a",
+    "agentId": "demo-agent-001",
+    "originalLength": 119,
+    "sanitizedLength": 175,
+    "riskLevel": "critical",
+    "decision": "BLOCK",
+    "threats": 4
+  },
+  {
+    "timestamp": "2026-01-05T06:56:58.988Z",
+    "requestId": "req_1767596218984_glkqlxxrl",
+    "certificateId": "cert_1767596218986_d4tyx4g1q",
+    "agentId": "demo-agent-001",
+    "originalLength": 67,
+    "sanitizedLength": 67,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T06:57:00.038Z",
+    "requestId": "req_1767596220031_19wsxpxih",
+    "certificateId": "cert_1767596220033_dhjjjgybe",
+    "agentId": "demo-agent-001",
+    "originalLength": 41,
+    "sanitizedLength": 41,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T06:57:01.079Z",
+    "requestId": "req_1767596221069_ojkjj8jng",
+    "certificateId": "cert_1767596221073_pjuz1fkmb",
+    "agentId": "demo-agent-001",
+    "originalLength": 64,
+    "sanitizedLength": 64,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T06:57:02.104Z",
+    "requestId": "req_1767596222099_d7xrcg6tp",
+    "certificateId": "cert_1767596222101_lcy5ah67l",
+    "agentId": "demo-agent-001",
+    "originalLength": 50,
+    "sanitizedLength": 50,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T07:11:39.768Z",
+    "requestId": "req_1767597099760_349gij9zt",
+    "certificateId": "cert_1767597099765_um4sn1789",
+    "agentId": "cli-agent-001",
+    "originalLength": 100,
+    "sanitizedLength": 107,
+    "riskLevel": "medium",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 1
+  },
+  {
+    "timestamp": "2026-01-05T07:14:01.842Z",
+    "requestId": "req_1767597241836_ko324fiu0",
+    "certificateId": "cert_1767597241838_idw69ljbl",
+    "agentId": "demo-agent-001",
+    "originalLength": 63,
+    "sanitizedLength": 88,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 2
+  },
+  {
+    "timestamp": "2026-01-05T07:14:02.878Z",
+    "requestId": "req_1767597242873_5ysdt2w5q",
+    "certificateId": "cert_1767597242874_g2wq6fg2c",
+    "agentId": "demo-agent-001",
+    "originalLength": 100,
+    "sanitizedLength": 213,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 5
+  },
+  {
+    "timestamp": "2026-01-05T07:14:03.922Z",
+    "requestId": "req_1767597243914_q81o46lpv",
+    "certificateId": "cert_1767597243919_1i8vugjte",
+    "agentId": "demo-agent-001",
+    "originalLength": 122,
+    "sanitizedLength": 179,
+    "riskLevel": "high",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 3
+  },
+  {
+    "timestamp": "2026-01-05T07:14:04.951Z",
+    "requestId": "req_1767597244945_ofp2weslw",
+    "certificateId": "cert_1767597244947_930wsx64i",
+    "agentId": "demo-agent-001",
+    "originalLength": 91,
+    "sanitizedLength": 132,
+    "riskLevel": "medium",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 2
+  },
+  {
+    "timestamp": "2026-01-05T07:14:05.987Z",
+    "requestId": "req_1767597245982_gz3v6ug53",
+    "certificateId": "cert_1767597245983_k9t240200",
+    "agentId": "demo-agent-001",
+    "originalLength": 119,
+    "sanitizedLength": 175,
+    "riskLevel": "critical",
+    "decision": "BLOCK",
+    "threats": 4
+  },
+  {
+    "timestamp": "2026-01-05T07:14:07.010Z",
+    "requestId": "req_1767597247005_1xra59g2w",
+    "certificateId": "cert_1767597247007_axueuubux",
+    "agentId": "demo-agent-001",
+    "originalLength": 67,
+    "sanitizedLength": 67,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T07:14:08.046Z",
+    "requestId": "req_1767597248037_z8gjae6z9",
+    "certificateId": "cert_1767597248041_glclik2tn",
+    "agentId": "demo-agent-001",
+    "originalLength": 41,
+    "sanitizedLength": 41,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T07:14:09.082Z",
+    "requestId": "req_1767597249076_rt0595t3w",
+    "certificateId": "cert_1767597249079_1ob0p4aeo",
+    "agentId": "demo-agent-001",
+    "originalLength": 64,
+    "sanitizedLength": 64,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T07:14:10.114Z",
+    "requestId": "req_1767597250110_kyzn9fkc7",
+    "certificateId": "cert_1767597250111_poz0ouzjd",
+    "agentId": "demo-agent-001",
+    "originalLength": 50,
+    "sanitizedLength": 50,
+    "riskLevel": "clean",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 0
+  },
+  {
+    "timestamp": "2026-01-05T07:25:26.992Z",
+    "requestId": "req_1767597926989_3ytx8a8q9",
+    "certificateId": "cert_1767597926990_5u7r6hjkk",
+    "agentId": "cli-agent-001",
+    "originalLength": 113,
+    "sanitizedLength": 120,
+    "riskLevel": "medium",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 1
+  }
+]
