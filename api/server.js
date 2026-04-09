@@ -35,10 +35,10 @@ const swaggerOptions = {
       description: "AI Security Gateway to detect prompt injection using embeddings",
     },
     servers: [
-      {
-        url: process.env.BASE_URL || `http://localhost:${PORT}`,
-      },
-    ],
+  {
+    url: "/"
+  }
+],
   },
 
   // 🔥 FIX: include both routes + current file
