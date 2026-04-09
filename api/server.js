@@ -1,119 +1,143 @@
-const express = require('express');
-const { analyzeSecurity } = require('./sanitizer');
-const { logAudit } = require('./logger');
+/**
+ * server.js — Entry Point: InjectZero API Server
+ */
 
-const app = express();
-app.use(express.json());
+"use strict";
 
-// ✅ CORE SECURITY ENDPOINT
-app.post('/analyze', async (req, res) => {
-  const { content, agent_id = 'unknown', source_type = 'api' } = req.body;
+require("dotenv").config();
 
-  if (!content) {
-    return res.status(400).json({ error: 'Content required' });
-  }
+const express = require("express");
+const helmet  = require("helmet");
+const cors    = require("cors");
+const morgan  = require("morgan");
 
-  const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
-  console.log('\n╔════════════════════════════════════════════════════╗');
-  console.log('║         🔐 SECURITY ANALYSIS INITIATED              ║');
-  console.log('╚════════════════════════════════════════════════════╝\n');
+const securityRoutes = require("./routes/securityRoutes");
 
-  console.log(`📋 Request ID: ${requestId}`);
-  console.log(`🤖 Agent ID: ${agent_id}`);
-  console.log(`📊 Content Length: ${content.length} chars`);
-  console.log(`📍 Source: ${source_type}\n`);
+// ---------------------------------------------------------------------------
+// App initialisation
+// ---------------------------------------------------------------------------
+const app  = express();
+const PORT = parseInt(process.env.PORT, 10) || 3000;
 
-  const analysis = analyzeSecurity(content);
-  const certificateId = `cert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+// ---------------------------------------------------------------------------
+// Swagger Configuration
+// ---------------------------------------------------------------------------
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "InjectZero API",
+      version: "1.0.0",
+      description: "AI Security Gateway to detect prompt injection using embeddings",
+    },
+    servers: [
+      {
+        url: process.env.BASE_URL || `http://localhost:${PORT}`,
+      },
+    ],
+  },
 
-  const response = {
-    request_id: requestId,
-    certificate_id: certificateId,
-    risk_level: analysis.riskLevel,
-    risk_score: analysis.riskScore,
-    confidence: 'HIGH',
-    threats_detected: analysis.threats.length,
-    threats: analysis.threats,
-    original_content: content,
-    sanitized_content: analysis.sanitizedContent,
-    content_reduction: analysis.contentReduction,
-    decision: analysis.riskLevel === 'critical' ? 'BLOCK' : 'ALLOW_SANITIZED',
-    threat_details: analysis.detailedThreats,
-  };
+  // 🔥 FIX: include both routes + current file
+  apis: ["./api/routes/*.js", "./server.js"],
+};
 
-  // Display results in console
-  displayAnalysisResults(response);
+const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
-  // Log for audit trail
-  logAudit({
-    requestId,
-    certificateId,
-    agentId: agent_id,
-    originalLength: content.length,
-    sanitizedLength: response.sanitized_content.length,
-    riskLevel: response.risk_level,
-    decision: response.decision,
-    threats: analysis.threats.length,
+// ---------------------------------------------------------------------------
+// Middleware
+// ---------------------------------------------------------------------------
+app.use(helmet());
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+
+app.use(express.json({ limit: "64kb" }));
+app.use(express.urlencoded({ extended: false, limit: "64kb" }));
+
+// ---------------------------------------------------------------------------
+// Swagger Route (UI)
+// ---------------------------------------------------------------------------
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+  explorer: true,
+}));
+
+// ---------------------------------------------------------------------------
+// Routes
+// ---------------------------------------------------------------------------
+app.use("/api/v1", securityRoutes);
+
+// ---------------------------------------------------------------------------
+// Root route
+// ---------------------------------------------------------------------------
+app.get("/", (req, res) => {
+  res.json({
+    service: "InjectZero — AI Security Gateway for Agentic Systems",
+    version: "1.0.0",
+    endpoints: {
+      health:  "GET  /api/v1/health",
+      analyze: "POST /api/v1/analyze",
+    },
+    docs: `${process.env.BASE_URL || `http://localhost:${PORT}`}/api-docs`,
   });
-
-  res.json(response);
 });
 
-// ✅ HEALTH CHECK
-app.get('/health', (req, res) => {
-  res.json({ status: 'PromptGuard API is running ✅', timestamp: new Date().toISOString() });
+// ---------------------------------------------------------------------------
+// Health check (IMPORTANT for deployment platforms like Render)
+// ---------------------------------------------------------------------------
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
-function displayAnalysisResults(response) {
-  console.log('╔════════════════════════════════════════════════════╗');
-  console.log('║        🛡️  PROMPTGUARD ANALYSIS RESULT             ║');
-  console.log('╚════════════════════════════════════════════════════╝\n');
+// ---------------------------------------------------------------------------
+// 404 handler
+// ---------------------------------------------------------------------------
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `Route ${req.method} ${req.path} does not exist.`,
+  });
+});
 
-  const riskEmoji = {
-    clean: '✅',
-    low: '🟢',
-    medium: '🟡',
-    high: '🟠',
-    critical: '🔴',
-  };
+// ---------------------------------------------------------------------------
+// Global error handler
+// ---------------------------------------------------------------------------
+app.use((err, req, res, _next) => {
+  console.error("[SERVER ERROR]", err.stack);
 
-  console.log(`Risk Level: ${riskEmoji[response.risk_level]} ${response.risk_level.toUpperCase()}`);
-  console.log(`Risk Score: ${response.risk_score}/100`);
-  console.log(`Confidence: ${response.confidence}`);
-  console.log(`Threats Detected: ${response.threats_detected}\n`);
+  const isDev = process.env.NODE_ENV !== "production";
 
-  if (response.threat_details.length > 0) {
-    console.log('📌 THREAT BREAKDOWN:');
-    response.threat_details.forEach((threat, idx) => {
-      console.log(`   ${idx + 1}. [${threat.severity}] ${threat.type}`);
-      console.log(`      Pattern: "${threat.match}"`);
-    });
-    console.log();
-  }
+  res.status(err.status || 500).json({
+    error: "Internal Server Error",
+    message: isDev ? err.message : "An unexpected error occurred.",
+    ...(isDev && { stack: err.stack }),
+  });
+});
 
-  console.log('📊 CONTENT ANALYSIS:');
-  console.log(`   Original: ${response.original_content.length} chars`);
-  console.log(`   Sanitized: ${response.sanitized_content.length} chars`);
-  console.log(`   Change: ${response.content_reduction}%\n`);
-
-  console.log(`🚨 DECISION: ${response.decision}\n`);
-
-  if (response.decision === 'ALLOW_SANITIZED') {
-    console.log('✅ INPUT WILL BE PROCESSED (SANITIZED)\n');
-    console.log('📋 ORIGINAL INPUT:');
-    console.log('   ' + response.original_content + '\n');
-    console.log('🧹 SANITIZED OUTPUT (what LLM will receive):');
-    console.log('   ' + response.sanitized_content + '\n');
-  } else {
-    console.log('🚫 INPUT BLOCKED - CRITICAL THREATS DETECTED\n');
-  }
-}
-
-const PORT = process.env.PORT || 3000;
+// ---------------------------------------------------------------------------
+// Start server
+// ---------------------------------------------------------------------------
 app.listen(PORT, () => {
-  console.log(`\n✅ PromptGuard API running on http://localhost:${PORT}`);
-  console.log('📡 Ready to analyze security threats...\n');
+  console.log("╔════════════════════════════════════════════╗");
+  console.log("║   InjectZero — AI Security Gateway  v1.0  ║");
+  console.log("╚════════════════════════════════════════════╝");
+  console.log(`  ► Listening on  http://localhost:${PORT}`);
+  console.log(`  ► Swagger Docs  http://localhost:${PORT}/api-docs`);
+  console.log(`  ► Health Check  http://localhost:${PORT}/health`);
+  console.log(`  ► Environment   ${process.env.NODE_ENV || "development"}`);
+  console.log(`  ► LLM Provider  ${process.env.LLM_PROVIDER || "mock"}`);
+  console.log(`  ► Risk Threshold ${process.env.RISK_THRESHOLD || "0.7"}`);
+  console.log("─────────────────────────────────────────────");
 });
 
 module.exports = app;

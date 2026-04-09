@@ -1,0 +1,13 @@
+[
+  {
+    "timestamp": "2026-04-03T16:40:19.501Z",
+    "requestId": "req_1775234419481_tisoxn5cb",
+    "certificateId": "cert_1775234419492_1r4s45crh",
+    "agentId": "cli-agent-001",
+    "originalLength": 78,
+    "sanitizedLength": 85,
+    "riskLevel": "medium",
+    "decision": "ALLOW_SANITIZED",
+    "threats": 1
+  }
+]

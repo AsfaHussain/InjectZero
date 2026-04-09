@@ -1,29 +1,35 @@
 {
-  "name": "promptguard-enhanced-demo",
-  "version": "2.0.0",
-  "description": "Enterprise-grade Prompt Injection Defense with Smart LLM Integration",
+  "name": "injectzero",
+  "version": "1.0.0",
+  "description": "AI Security Gateway for Agentic Systems — middleware that protects LLM pipelines from prompt injection, PII leakage, and malicious instructions.",
   "main": "api/server.js",
   "scripts": {
-    "server": "node api/server.js",
-    "demo": "node demo.js",
-    "start": "npm run server & npm run demo",
-    "test": "node demo.js"
+    "start": "node api/server.js",
+    "dev": "nodemon api/server.js",
+    "agent": "node agent/agent.js",
+    "test": "echo \"No tests configured yet\" && exit 0"
   },
   "keywords": [
-    "security",
+    "ai-security",
     "prompt-injection",
-    "ai-safety",
-    "llm",
-    "agent"
+    "llm-gateway",
+    "pii-detection",
+    "agentic-systems"
   ],
-  "author": "PromptGuard Team",
+  "author": "InjectZero",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.6.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
-    "axios": "^1.6.0"
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^9.0.1"
   },
-  "devDependencies": {},
-  "engines": {
-    "node": ">=14.0.0"
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }

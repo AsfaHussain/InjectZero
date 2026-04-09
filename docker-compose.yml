@@ -1,0 +1,96 @@
+version: "3.9"
+
+# =============================================================================
+# InjectZero — AI Security Gateway
+# docker-compose.yml
+#
+# Usage:
+#   docker compose up --build           # Build & start
+#   docker compose up -d                # Detached mode
+#   docker compose logs -f gateway      # Stream logs
+#   docker compose down                 # Stop & remove containers
+# =============================================================================
+
+services:
+  # ── Main Gateway Service ────────────────────────────────────────────────────
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: injectzero-gateway
+    image: injectzero:latest
+    restart: unless-stopped
+
+    ports:
+      - "${PORT:-3000}:3000"
+
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      # OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
+      RISK_THRESHOLD: ${RISK_THRESHOLD:-0.7}
+      VECTOR_SIMILARITY_THRESHOLD: ${VECTOR_SIMILARITY_THRESHOLD:-0.75}
+      MAX_INPUT_LENGTH: ${MAX_INPUT_LENGTH:-4096}
+
+    # Mount a .env file for local development convenience.
+    # Comment this out in production and pass secrets via your secrets manager.
+    env_file:
+      - .env
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+    # Resource limits — tune to your deployment environment
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.10"
+          memory: 64M
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ── Agent Simulator (one-shot, runs after gateway is healthy) ───────────────
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: injectzero-agent
+    image: injectzero:latest
+    # Override the default CMD to run the agent script
+    command: ["node", "agent/agent.js"]
+    depends_on:
+      gateway:
+        condition: service_healthy
+
+    environment:
+      GATEWAY_URL: http://gateway:3000
+      NODE_ENV: ${NODE_ENV:-production}
+
+    env_file:
+      - .env
+
+    # The agent exits after running all test cases — don't restart it
+    restart: "no"
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
